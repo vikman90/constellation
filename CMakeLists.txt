@@ -56,10 +56,18 @@ if(EXISTS "${imgui-sfml_SOURCE_DIR}/imgui-SFML.cpp")
     file(WRITE "${imgui-sfml_SOURCE_DIR}/imgui-SFML.cpp" "${IMGUI_SFML_CPP}")
 endif()
 
-add_executable(Constellation main.cpp)
+add_executable(Constellation 
+    src/main.cpp
+    src/Application.cpp
+    src/GuiPanel.cpp
+    src/generators/Generators.cpp
+    src/visualizations/Display2D.cpp
+    src/visualizations/Histogram.cpp
+)
 
 # Link
 target_link_libraries(Constellation PRIVATE sfml-graphics sfml-window sfml-system ImGui-SFML::ImGui-SFML)
+target_include_directories(Constellation PRIVATE src)
 
 # Copy DLLs exactly next to the executable on Windows
 if(WIN32)
