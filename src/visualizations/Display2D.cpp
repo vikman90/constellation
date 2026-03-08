@@ -32,7 +32,6 @@ void Display2DVis::ensureCanvas(const sf::Vector2u &windowSize) {
 void Display2DVis::processBatch(IGenerator *gen, const sf::Vector2u &windowSize,
                                 int batchSize) {
   ensureCanvas(windowSize);
-  batch.clear();
 
   for (int i = 0; i < batchSize; ++i) {
     double x_val = gen->next();
@@ -48,15 +47,20 @@ void Display2DVis::render(sf::RenderTarget &target, const sf::Color &color) {
   if (!canvas)
     return;
 
-  // 1. Apply the fade overlay to darken old points on the canvas
-  fadeOverlay.setFillColor(
-      sf::Color(0, 0, 0, static_cast<sf::Uint8>(fade_alpha)));
-  canvas->draw(fadeOverlay, sf::BlendAlpha);
+  // Only apply fade and draw new points when there is an active batch.
+  // This ensures pausing stops the fade immediately.
+  if (batch.getVertexCount() > 0) {
+    // 1. Apply the fade overlay to darken old points on the canvas
+    fadeOverlay.setFillColor(
+        sf::Color(0, 0, 0, static_cast<sf::Uint8>(fade_alpha)));
+    canvas->draw(fadeOverlay, sf::BlendAlpha);
 
-  // 2. Color and draw the new batch of points onto the canvas
-  for (size_t i = 0; i < batch.getVertexCount(); ++i)
-    batch[i].color = color;
-  canvas->draw(batch);
+    // 2. Color and draw the new batch of points onto the canvas
+    for (size_t i = 0; i < batch.getVertexCount(); ++i)
+      batch[i].color = color;
+    canvas->draw(batch);
+  }
+
   canvas->display();
 
   // 3. Blit canvas to the main window, scaling to fill it entirely
@@ -64,6 +68,10 @@ void Display2DVis::render(sf::RenderTarget &target, const sf::Color &color) {
   sprite.setScale(static_cast<float>(target.getSize().x) / canvas->getSize().x,
                   static_cast<float>(target.getSize().y) / canvas->getSize().y);
   target.draw(sprite);
+
+  // Clear batch after drawing so the next frame starts empty.
+  // If not playing, processBatch won't refill it and the fade won't run.
+  batch.clear();
 }
 
 void Display2DVis::clear() {
