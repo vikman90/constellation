@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build_and_release:
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libxrandr-dev libxcursor-dev libudev-dev libfreetype-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      run: cmake --build build --config Release
+
+    - name: Archive Linux
+      if: runner.os == 'Linux'
+      run: tar -czvf constellation-linux.tar.gz -C build Constellation resources
+
+    - name: Archive macOS
+      if: runner.os == 'macOS'
+      run: tar -czvf constellation-macos.tar.gz -C build Constellation resources
+
+    - name: Archive Windows
+      if: runner.os == 'Windows'
+      run: Compress-Archive -Path build/Release/* -DestinationPath constellation-windows.zip
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          constellation-windows.zip
+          constellation-linux.tar.gz
+          constellation-macos.tar.gz
+
