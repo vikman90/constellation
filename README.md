@@ -66,6 +66,11 @@ This project uses modern CMake. It is completely cross-platform.
    ```
    *(If you don't use Ninja, omit the `-G Ninja` flag to use your system's default generator, like Visual Studio on Windows or Makefiles on Linux/mac).*
 
+   To also compile the unit tests (requires an internet connection to download Google Test), add `-DBUILD_TESTING=ON`:
+   ```bash
+   cmake -B build -G Ninja -DBUILD_TESTING=ON
+   ```
+
 3. **Build the application:**
    ```bash
    cmake --build build --config Release
@@ -81,6 +86,13 @@ This project uses modern CMake. It is completely cross-platform.
    ```
    
    *(On Windows, the CMake script automatically copies the required SFML `.dll` files next to the generated executable after building).*
+
+5. **Run the unit tests (optional):**
+   ```bash
+   cd build
+   ctest -C Release --output-on-failure
+   ```
+   Tests cover generator output ranges and factory correctness, and are powered by [Google Test](https://github.com/google/googletest) (downloaded automatically by CMake).
 
 ## Architecture
 
