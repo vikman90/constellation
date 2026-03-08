@@ -37,6 +37,13 @@ void Application::processEvents() {
     if (event.type == sf::Event::Closed) {
       window.close();
     }
+    if (event.type == sf::Event::Resized) {
+      // Reset the view to match the new window size so SFML's coordinate
+      // system stays 1:1 with pixels after a resize.
+      sf::FloatRect visibleArea(0.f, 0.f, static_cast<float>(event.size.width),
+                                static_cast<float>(event.size.height));
+      window.setView(sf::View(visibleArea));
+    }
     if (event.type == sf::Event::KeyPressed &&
         event.key.code == sf::Keyboard::Space) {
       gui.togglePlaying();
