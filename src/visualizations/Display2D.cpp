@@ -8,7 +8,7 @@ void Display2DVis::processBatch(IGenerator *gen, const sf::Vector2u &windowSize,
     double x_val = gen->next();
     double y_val = gen->next();
     float px = static_cast<float>(x_val * windowSize.x);
-    float py = static_cast<float>(y_val * windowSize.y);
+    float py = static_cast<float>((1.0 - y_val) * windowSize.y);
 
     // Color will be set during render
     points.append(sf::Vertex(sf::Vector2f(px, py), sf::Color::White));
