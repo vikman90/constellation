@@ -1,6 +1,13 @@
 #pragma once
 #include "IVisualization.hpp"
 
+/**
+ * @brief Visualizes RNG data as a 2D scatter plot.
+ *
+ * Maps pairs of sequential random numbers (X, Y) to pixel coordinates on the
+ * screen. Useful for detecting spatial patterns, clustering, or striping in the
+ * generator.
+ */
 class Display2DVis : public IVisualization {
   sf::VertexArray points;
 
