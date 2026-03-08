@@ -72,6 +72,14 @@ add_executable(Constellation
     src/visualizations/Histogram.cpp
 )
 
+# Embed Windows executable icon via resource file
+if(WIN32)
+    target_sources(Constellation PRIVATE resources/app.rc)
+    set_source_files_properties(resources/app.rc PROPERTIES
+        COMPILE_FLAGS "/nologo"
+    )
+endif()
+
 # Link
 target_link_libraries(Constellation PRIVATE sfml-graphics sfml-window sfml-system ImGui-SFML::ImGui-SFML)
 target_include_directories(Constellation PRIVATE src)
@@ -124,3 +132,10 @@ if(WIN32)
         $<TARGET_FILE_DIR:Constellation>
     )
 endif()
+
+# Copy resources folder (icon, etc.) next to the executable
+add_custom_command(TARGET Constellation POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/resources
+    $<TARGET_FILE_DIR:Constellation>/resources
+)

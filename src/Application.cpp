@@ -12,6 +12,11 @@ Application::Application()
   window.setFramerateLimit(60);
   ImGui::SFML::Init(window);
 
+  // Set window icon (loaded from resources next to the executable)
+  sf::Image icon;
+  if (icon.loadFromFile("resources/icon.png"))
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
   generators = GeneratorFactory::createAllAvailable();
 
   visualizations.push_back(std::make_unique<Display2DVis>());

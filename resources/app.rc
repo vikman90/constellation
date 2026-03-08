@@ -1,0 +1,6 @@
+// Windows resource file for Constellation RNG Visualizer
+// Embeds the application icon into the executable.
+
+#define IDI_ICON1 101
+
+IDI_ICON1 ICON "icon.ico"
