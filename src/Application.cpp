@@ -48,9 +48,10 @@ void Application::update(sf::Time deltaTime) {
   ImGui::SFML::Update(window, deltaTime);
 
   bool clearRequested = false;
+  int batchSize = 0;
 
   gui.render(generators, visualizations, playing, current_gen_idx,
-             current_viz_idx, current_color, clearRequested);
+             current_viz_idx, current_color, batchSize, clearRequested);
 
   if (clearRequested) {
     resetCanvas();
@@ -59,9 +60,8 @@ void Application::update(sf::Time deltaTime) {
   if (playing) {
     auto *gen = generators[current_gen_idx].get();
     auto *viz = visualizations[current_viz_idx].get();
-    int batch = viz->getRecommendedBatchSize();
 
-    viz->processBatch(gen, window.getSize(), batch);
+    viz->processBatch(gen, window.getSize(), batchSize);
   }
 }
 

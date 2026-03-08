@@ -5,7 +5,7 @@ void GuiPanel::render(
     const std::vector<std::unique_ptr<IGenerator>> &generators,
     const std::vector<std::unique_ptr<IVisualization>> &visualizations,
     bool &outPlaying, int &outGenIdx, int &outVizIdx, sf::Color &outColor,
-    bool &outClearRequested) {
+    int &outBatchSize, bool &outClearRequested) {
   outClearRequested = false;
 
   ImGui::Begin("Controls");
@@ -44,6 +44,13 @@ void GuiPanel::render(
     // Updated color internally
   }
 
+  // Batch Size
+  ImGui::InputInt("Batch Size", &current_batch_size, 100, 1000);
+  if (current_batch_size < 1)
+    current_batch_size = 1;
+  if (current_batch_size > 100000)
+    current_batch_size = 100000;
+
   ImGui::Separator();
 
   if (ImGui::Button(playing ? "Pause (Space)" : "Play (Space)",
@@ -64,6 +71,7 @@ void GuiPanel::render(
   outPlaying = playing;
   outGenIdx = current_gen_idx;
   outVizIdx = current_viz_idx;
+  outBatchSize = current_batch_size;
   outColor = sf::Color(color_float[0] * 255, color_float[1] * 255,
                        color_float[2] * 255);
 }

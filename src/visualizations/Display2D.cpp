@@ -48,6 +48,6 @@ size_t Display2DVis::getDataPointCount() const {
   return points.getVertexCount();
 }
 
-int Display2DVis::getRecommendedBatchSize() const { return 5000; }
+int Display2DVis::getRecommendedBatchSize() const { return 1000; }
 
 const char *Display2DVis::name() const { return "Display (2D Points)"; }

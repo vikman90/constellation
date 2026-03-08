@@ -8,6 +8,7 @@
 class GuiPanel {
   int current_gen_idx = 0;
   int current_viz_idx = 0;
+  int current_batch_size = 1000;
   bool playing = false;
   float color_float[3] = {0.0f, 1.0f, 1.0f};
 
@@ -16,7 +17,7 @@ public:
   render(const std::vector<std::unique_ptr<IGenerator>> &generators,
          const std::vector<std::unique_ptr<IVisualization>> &visualizations,
          bool &outPlaying, int &outGenIdx, int &outVizIdx, sf::Color &outColor,
-         bool &outClearRequested);
+         int &outBatchSize, bool &outClearRequested);
 
   void togglePlaying() { playing = !playing; }
   bool isPlaying() const { return playing; }

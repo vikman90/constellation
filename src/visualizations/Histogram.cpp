@@ -41,6 +41,6 @@ size_t HistogramVis::getDataPointCount() const {
   return total;
 }
 
-int HistogramVis::getRecommendedBatchSize() const { return 50000; }
+int HistogramVis::getRecommendedBatchSize() const { return 1000; }
 
 const char *HistogramVis::name() const { return "Histogram (1D Bars)"; }
