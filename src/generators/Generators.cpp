@@ -8,7 +8,17 @@ const char *GenMT19937::name() const {
 
 GenCRand::GenCRand() { srand(static_cast<unsigned>(time(nullptr))); }
 double GenCRand::next() { return static_cast<double>(rand()) / RAND_MAX; }
-const char *GenCRand::name() const { return "C rand()"; }
+const char *GenCRand::name() const { return "C rand() [Uniform]"; }
+
+GenNormal::GenNormal() : gen(std::random_device{}()), dist(0.5, 0.15) {}
+double GenNormal::next() { return dist(gen); }
+const char *GenNormal::name() const {
+  return "Normal (Gaussian) Dist [µ=0.5, σ=0.15]";
+}
+
+GenExponential::GenExponential() : gen(std::random_device{}()), dist(5.0) {}
+double GenExponential::next() { return dist(gen); }
+const char *GenExponential::name() const { return "Exponential Dist [λ=5.0]"; }
 
 #ifdef _WIN32
 GenWindows::GenWindows() : hAlg(NULL) {
@@ -33,6 +43,8 @@ GeneratorFactory::createAllAvailable() {
   std::vector<std::unique_ptr<IGenerator>> list;
   list.push_back(std::make_unique<GenMT19937>());
   list.push_back(std::make_unique<GenCRand>());
+  list.push_back(std::make_unique<GenNormal>());
+  list.push_back(std::make_unique<GenExponential>());
 #ifdef _WIN32
   list.push_back(std::make_unique<GenWindows>());
 #endif

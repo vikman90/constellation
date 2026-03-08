@@ -36,6 +36,28 @@ public:
   const char *name() const override;
 };
 
+// Normal (Gaussian) Distribution Generator
+class GenNormal : public IGenerator {
+  std::mt19937 gen;
+  std::normal_distribution<double> dist;
+
+public:
+  GenNormal();
+  double next() override;
+  const char *name() const override;
+};
+
+// Exponential Distribution Generator
+class GenExponential : public IGenerator {
+  std::mt19937 gen;
+  std::exponential_distribution<double> dist;
+
+public:
+  GenExponential();
+  double next() override;
+  const char *name() const override;
+};
+
 #ifdef _WIN32
 // Concrete Windows BCrypt Generator
 class GenWindows : public IGenerator {
