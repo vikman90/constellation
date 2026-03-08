@@ -8,10 +8,13 @@
  * Uses one bin per pixel column, so each generated value maps directly and
  * unambiguously to a single screen column. Automatically resizes and resets
  * when the window width changes.
+ *
+ * The histogram is scaled so that the mean bin value corresponds to half the
+ * screen height, with bars clamped to never exceed the screen boundary.
  */
 class HistogramVis : public IVisualization {
   std::vector<unsigned long long> histogram;
-  unsigned long long max_val;
+  unsigned long long total_count;
   sf::Vector2u lastWindowSize;
 
 public:
