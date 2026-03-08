@@ -60,7 +60,12 @@ add_executable(Constellation
     src/main.cpp
     src/Application.cpp
     src/GuiPanel.cpp
-    src/generators/Generators.cpp
+    src/generators/GenMT19937.cpp
+    src/generators/GenCRand.cpp
+    src/generators/GenNormal.cpp
+    src/generators/GenExponential.cpp
+    src/generators/GenWindows.cpp
+    src/generators/GeneratorFactory.cpp
     src/visualizations/Display2D.cpp
     src/visualizations/Histogram.cpp
 )

@@ -1,10 +1,9 @@
 #include "Application.hpp"
-#include "generators/Generators.hpp"
+#include "generators/GeneratorFactory.hpp"
 #include "visualizations/Display2D.hpp"
 #include "visualizations/Histogram.hpp"
 #include <imgui-SFML.h>
 #include <imgui.h>
-
 
 Application::Application()
     : window(sf::VideoMode(1000, 800), "Constellation RNG Visualizer"),
