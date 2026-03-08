@@ -2,6 +2,11 @@
 
 [![Build](https://github.com/vikman90/constellation/actions/workflows/build.yml/badge.svg)](https://github.com/vikman90/constellation/actions/workflows/build.yml)
 
+<p align="center">
+  <img src="docs/screenshot-1.png" width="49%" alt="Display 2D scatter plot"/>
+  <img src="docs/screenshot-2.png" width="49%" alt="Histogram visualization"/>
+</p>
+
 Constellation is a C++ application designed to visually analyze the "quality" or "visual noise" of various Random Number Generators (RNG). It provides a graphical interface where users can quickly examine and compare the distribution and patterns produced by different algorithms in real-time.
 
 By plotting thousands of random data points per frame, Constellation acts as a visual lens into the entropy and statistical distribution of numerical PRNG (Pseudo-Random Number Generator) engines.
@@ -11,7 +16,7 @@ By plotting thousands of random data points per frame, Constellation acts as a v
 - **Real-time generation and drawing:** See the distributions forming dynamically frame by frame.
 - **Configurable Batching:** Control how many points are drafted each frame (e.g. 1 point/frame for slow formation, or 100,000 points/frame for instant clouds).
 - **Multiple Engines:** Seamlessly switch between different random algorithms (both uniform and shaped distributions).
-- **Color Customization:** Use a real-time color picker to customize the visuals.
+- **Color Customization:** Use a real-time color picker and a customizable fade trail intensity to customize the visuals.
 - **Cross-Platform Building:** Powered by CMake, building automatically on Windows, Linux, and macOS.
 
 ## Integrated Generators
@@ -31,10 +36,10 @@ _Note: adding a new generator is as easy as implementing the `IGenerator` interf
 The data output of the generators can be interpreted using different visualization strategies:
 
 - **Display (2D Scatter Plot):**
-  Uses the RNG to draw $(X, Y)$ coordinate points. `(0,0)` is situated at the bottom-left corner and maps to the lowest possible output, while the opposite corner maps to the maximum value in both axes. A high-quality uniform generator will display uniform static noise over time, while biased generators might show stripes, clusters, or gradients.
+  Uses the RNG to draw $(X, Y)$ coordinate points on a high-performance GPU-accelerated canvas. It features a customizable fade trail effect that dims old points over time. `(0,0)` is situated at the bottom-left corner and maps to the lowest possible output, while the opposite corner maps to the maximum value in both axes. A high-quality uniform generator will display uniform static noise over time, while biased generators might show stripes, clusters, or gradients.
   
 - **Histogram (1D Bars):**
-  A classic bar chart that splits the numeric range into 1000 bins. It incrementally counts how many generated values have fallen into each bin. The height of the graph is dynamically auto-scaled to best fit the highest bin on the screen.
+  A probability distribution bar chart that maps the numeric range to the exact window width (one bin per pixel column), making it resolution-independent. It incrementally counts generated values mapping them to density. The height of the graph is dynamically auto-scaled so the mathematical mean sits exactly at half the screen height, while clamping the absolute peak to prevent off-screen overflow.
 
 ## Dependencies
 
@@ -57,7 +62,7 @@ This project uses modern CMake. It is completely cross-platform.
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/Constellation.git
+   git clone https://github.com/vikman90/Constellation.git
    cd Constellation
    ```
 
