@@ -55,4 +55,15 @@ public:
    * @return A null-terminated string containing the name.
    */
   virtual const char *name() const = 0;
+
+  /**
+   * @brief Sets the fade alpha for visualizations that support it.
+   *
+   * Default implementation is a no-op. Override in visualizations that
+   * support a GPU-side fade/trail effect, such as Display2DVis.
+   *
+   * @param alpha Opacity subtracted each frame (0 = no fade, 255 = instant
+   * clear).
+   */
+  virtual void setFadeAlpha(int alpha) { (void)alpha; }
 };

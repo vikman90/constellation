@@ -5,7 +5,7 @@ void GuiPanel::render(
     const std::vector<std::unique_ptr<IGenerator>> &generators,
     const std::vector<std::unique_ptr<IVisualization>> &visualizations,
     bool &outPlaying, int &outGenIdx, int &outVizIdx, sf::Color &outColor,
-    int &outBatchSize, bool &outClearRequested) {
+    int &outBatchSize, int &outFadeAlpha, bool &outClearRequested) {
   outClearRequested = false;
 
   ImGui::Begin("Controls");
@@ -51,6 +51,14 @@ void GuiPanel::render(
   if (current_batch_size > 100000)
     current_batch_size = 100000;
 
+  // Fade alpha – only relevant for Display 2D (index 0)
+  if (current_viz_idx == 0) {
+    ImGui::SliderInt("Fade", &current_fade_alpha, 0, 64);
+    if (ImGui::IsItemHovered())
+      ImGui::SetTooltip(
+          "Alpha of the fade overlay per frame\n(0 = no fade, 64 = fast fade)");
+  }
+
   ImGui::Separator();
 
   if (ImGui::Button(playing ? "Pause (Space)" : "Play (Space)",
@@ -72,6 +80,7 @@ void GuiPanel::render(
   outGenIdx = current_gen_idx;
   outVizIdx = current_viz_idx;
   outBatchSize = current_batch_size;
+  outFadeAlpha = current_fade_alpha;
   outColor = sf::Color(color_float[0] * 255, color_float[1] * 255,
                        color_float[2] * 255);
 }

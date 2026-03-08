@@ -49,9 +49,13 @@ void Application::update(sf::Time deltaTime) {
 
   bool clearRequested = false;
   int batchSize = 0;
+  int fadeAlpha = 8;
 
   gui.render(generators, visualizations, playing, current_gen_idx,
-             current_viz_idx, current_color, batchSize, clearRequested);
+             current_viz_idx, current_color, batchSize, fadeAlpha,
+             clearRequested);
+
+  visualizations[current_viz_idx]->setFadeAlpha(fadeAlpha);
 
   if (clearRequested) {
     resetCanvas();

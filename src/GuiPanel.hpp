@@ -15,6 +15,7 @@ class GuiPanel {
   int current_gen_idx = 0;
   int current_viz_idx = 0;
   int current_batch_size = 1000;
+  int current_fade_alpha = 4;
   bool playing = false;
   float color_float[3] = {0.0f, 1.0f, 1.0f};
 
@@ -30,6 +31,7 @@ public:
    * @param outVizIdx Reference to Application selected visualization index.
    * @param outColor Reference to Application selected tint color.
    * @param outBatchSize Reference to Application requested points per frame.
+   * @param outFadeAlpha Reference to Application requested fade overlay alpha.
    * @param outClearRequested True if the user manually triggers a canvas clear
    * this frame.
    */
@@ -37,7 +39,7 @@ public:
   render(const std::vector<std::unique_ptr<IGenerator>> &generators,
          const std::vector<std::unique_ptr<IVisualization>> &visualizations,
          bool &outPlaying, int &outGenIdx, int &outVizIdx, sf::Color &outColor,
-         int &outBatchSize, bool &outClearRequested);
+         int &outBatchSize, int &outFadeAlpha, bool &outClearRequested);
 
   /**
    * @brief Inverts the playing state (Play/Pause toggle).

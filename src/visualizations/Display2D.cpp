@@ -1,53 +1,64 @@
 #include "Display2D.hpp"
 
-Display2DVis::Display2DVis() : points(sf::Points) {}
+Display2DVis::Display2DVis()
+    : batch(sf::Points), totalPoints(0), fade_alpha(4) {}
+
+void Display2DVis::ensureCanvas(const sf::Vector2u &windowSize) {
+  if (lastWindowSize == windowSize && canvas.getSize() == windowSize)
+    return;
+
+  lastWindowSize = windowSize;
+  canvas.create(windowSize.x, windowSize.y);
+  canvas.clear(sf::Color::Black);
+  fadeOverlay.setSize(sf::Vector2f(static_cast<float>(windowSize.x),
+                                   static_cast<float>(windowSize.y)));
+}
 
 void Display2DVis::processBatch(IGenerator *gen, const sf::Vector2u &windowSize,
                                 int batchSize) {
+  ensureCanvas(windowSize);
+  batch.clear();
+
   for (int i = 0; i < batchSize; ++i) {
     double x_val = gen->next();
     double y_val = gen->next();
     float px = static_cast<float>(x_val * windowSize.x);
     float py = static_cast<float>((1.0 - y_val) * windowSize.y);
-
-    // Color will be set during render
-    points.append(sf::Vertex(sf::Vector2f(px, py), sf::Color::White));
+    batch.append(sf::Vertex(sf::Vector2f(px, py), sf::Color::White));
+    ++totalPoints;
   }
 }
 
 void Display2DVis::render(sf::RenderTarget &target, const sf::Color &color) {
-  // Optionally update colors if they changed, or just apply uniformly.
-  // For performance, we can just apply it directly to new points,
-  // but here we might want to change all existing points instantly.
-  // However, iterating millions of points each frame is slow.
-  // We will cheat and just draw it as is, or set the color at creation time.
-  // To support instant color change without redefining all points:
-  // It's better to manage color application externally or draw with a shader.
-  // Let's modify all colors if the user changes them? Too slow.
-  // We will just let new points have the new color, or we reset array colors.
-  // Let's apply color to all vertices. (Fast enough for < 10M on modern CPUs).
+  // 1. Apply the fade overlay to darken old points on the canvas
+  fadeOverlay.setFillColor(
+      sf::Color(0, 0, 0, static_cast<sf::Uint8>(fade_alpha)));
+  canvas.draw(fadeOverlay, sf::BlendAlpha);
 
-  /*
-  for(size_t i = 0; i < points.getVertexCount(); ++i) {
-      points[i].color = color;
-  }
-  */
-  // To save CPU, we'll assign color when generating in real-time,
-  // but the updated design calls for color at render.
-  // Let's just update the vertices quickly.
-  for (size_t i = 0; i < points.getVertexCount(); ++i) {
-    points[i].color = color;
-  }
+  // 2. Color and draw the new batch of points onto the canvas
+  for (size_t i = 0; i < batch.getVertexCount(); ++i)
+    batch[i].color = color;
+  canvas.draw(batch);
+  canvas.display();
 
-  target.draw(points);
+  // 3. Blit the canvas texture to the main window
+  sf::Sprite sprite(canvas.getTexture());
+  target.draw(sprite);
 }
 
-void Display2DVis::clear() { points.clear(); }
-
-size_t Display2DVis::getDataPointCount() const {
-  return points.getVertexCount();
+void Display2DVis::clear() {
+  batch.clear();
+  totalPoints = 0;
+  if (canvas.getSize().x > 0)
+    canvas.clear(sf::Color::Black);
 }
+
+size_t Display2DVis::getDataPointCount() const { return totalPoints; }
 
 int Display2DVis::getRecommendedBatchSize() const { return 1000; }
 
 const char *Display2DVis::name() const { return "Display (2D Points)"; }
+
+void Display2DVis::setFadeAlpha(int alpha) {
+  fade_alpha = std::max(0, std::min(255, alpha));
+}
