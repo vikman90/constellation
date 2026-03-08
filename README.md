@@ -1,5 +1,7 @@
 # Constellation RNG Visualizer
 
+[![Build](https://github.com/vikman90/constellation/actions/workflows/build.yml/badge.svg)](https://github.com/vikman90/constellation/actions/workflows/build.yml)
+
 Constellation is a C++ application designed to visually analyze the "quality" or "visual noise" of various Random Number Generators (RNG). It provides a graphical interface where users can quickly examine and compare the distribution and patterns produced by different algorithms in real-time.
 
 By plotting thousands of random data points per frame, Constellation acts as a visual lens into the entropy and statistical distribution of numerical PRNG (Pseudo-Random Number Generator) engines.
